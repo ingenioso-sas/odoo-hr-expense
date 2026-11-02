@@ -11,9 +11,21 @@
                 <button
                     name="action_cancel"
                     states="post,done"
-                    string="Cancel"
+                    string="Reverse"
                     type="object"
                     groups="account.group_account_manager"
+                />
+            </xpath>
+            <xpath expr="//field[@name='account_move_id']" position="after">
+                <field
+                    name="reversed_move_id"
+                    groups="account.group_account_user"
+                    readonly="1"
+                />
+                <field
+                    name="reversal_move_id"
+                    groups="account.group_account_user"
+                    readonly="1"
                 />
             </xpath>
         </field>
