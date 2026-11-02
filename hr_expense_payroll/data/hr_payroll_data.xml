@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!-- Categoría propia: no participa en las bases de cotización ni en
+         prestaciones de la localización colombiana (que suman BASIC+DEV) -->
+    <record id="hr_salary_rule_category_reimb" model="hr.salary.rule.category">
+        <field name="name">Reimbursements</field>
+        <field name="code">REIMB</field>
+    </record>
+
+    <record id="rule_exp_reimb" model="hr.salary.rule">
+        <field name="name">Expense Reimbursement</field>
+        <field name="code">EXP_REIMB</field>
+        <!-- Secuencia 95: después de GROSS (90) y antes de NET (100) en la
+             localización CO, para que NET pueda sumar categories.REIMB -->
+        <field name="sequence">95</field>
+        <field name="category_id" ref="hr_salary_rule_category_reimb" />
+        <field name="condition_select">python</field>
+        <field
+            name="condition_python"
+        >result = inputs.EXP_REIMB and inputs.EXP_REIMB.amount &gt; 0.0</field>
+        <field name="amount_select">code</field>
+        <field
+            name="amount_python_compute"
+        >result = inputs.EXP_REIMB and inputs.EXP_REIMB.amount or 0.0</field>
+        <field name="appears_on_payslip" eval="True" />
+        <field name="note">Reimbursement of expenses paid by the employee.
+The debit line goes to the employee payable account (adjusted per employee
+on confirmation) and the credit is balanced on the salary journal bank
+account. It does NOT belong to any base of social security contributions.</field>
+    </record>
+
+    <record id="hr_rule_input_exp_reimb" model="hr.rule.input">
+        <field name="name">Expense Reimbursement</field>
+        <field name="code">EXP_REIMB</field>
+        <field name="input_id" ref="rule_exp_reimb" />
+    </record>
+</odoo>
