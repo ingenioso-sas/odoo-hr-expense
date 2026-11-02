@@ -1,0 +1,21 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<!-- Copyright 2026
+     License AGPL-3.0 or later (https://www.gnu.org/licenses/agpl). -->
+<odoo>
+    <!--
+      Parche de la regla NET colombiana ("Neto a Pagar").
+
+      El reembolso de gastos (categoría REIMB, regla EXP_REIMB con secuencia
+      95) NO entra en GROSS ni en IBC_BASE (que suman sólo BASIC + DEV +
+      HORAS_EXTRAS), por lo que no afecta las bases de cotización ni
+      prestaciones. Sí debe sumar en el neto, porque es dinero que se le paga
+      al trabajador en la misma nómina.
+    -->
+    <record id="l10n_co_hr_payroll_community.hr_rule_co_net" model="hr.salary.rule">
+        <field name="amount_python_compute"><![CDATA[
+# DED_CO se almacena con signo negativo
+# REIMB: reembolso de gastos pagados por el empleado (no es base salarial)
+result = (categories.GROSS or 0.0) + (categories.DED_CO or 0.0) + (categories.REIMB or 0.0)
+]]></field>
+    </record>
+</odoo>
